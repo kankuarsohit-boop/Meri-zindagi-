@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#155eef">
+<title>MeriZindagi</title>
+<style>
+:root{--blue:#155eef;--ink:#172033;--muted:#667085;--bg:#f4f7fb;--line:#e7ebf2;--white:#fff;--green:#079455}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+header{background:linear-gradient(135deg,#155eef,#447ff5);color:#fff;padding:22px 18px 28px;border-radius:0 0 24px 24px}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:22px;font-weight:800}.tag{font-size:12px;opacity:.9}
+main{max-width:720px;margin:auto;padding:14px 14px 90px}.welcome{font-size:14px;opacity:.9;margin-top:18px}.hero{font-size:23px;font-weight:750;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:-12px}
+.stat,.panel,.item{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 3px 12px #10182808}
+.stat small{color:var(--muted)}.stat strong{display:block;font-size:23px;margin-top:5px}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:18px 0 14px}
+.tab{border:0;background:#e9eef8;color:#344054;padding:10px 4px;border-radius:12px;font-size:12px;font-weight:650}
+.tab.active{background:var(--blue);color:white}
+h2{font-size:18px;margin:5px 0 12px}.muted{color:var(--muted);font-size:13px}
+button,.primary{border:0;border-radius:11px;padding:11px 14px;background:var(--blue);color:white;font-weight:700;font-size:14px;cursor:pointer}
+button.secondary{background:#eef3ff;color:var(--blue)}button.danger{background:#fff0f0;color:#b42318}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.list{display:grid;gap:9px;margin-top:12px}
+.item strong{font-size:14px}.item small{display:block;color:var(--muted);margin-top:4px}
+form{display:grid;gap:10px;margin-top:12px}label{font-size:13px;font-weight:650;color:#344054}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;font:inherit;background:#fff;color:var(--ink)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.hidden{display:none!important}
+.pill{font-size:11px;background:#ecfdf3;color:#027a48;border-radius:20px;padding:4px 8px}
+.notice{background:#fff8e7;border:1px solid #f5d98b;padding:12px;border-radius:12px;color:#7a4b00;font-size:12px;line-height:1.5}
+footer{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;border-top:1px solid var(--line);padding:10px;text-align:center;font-size:11px;color:var(--muted)}
+.empty{text-align:center;padding:22px;color:var(--muted);font-size:13px}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div><div class="brand">🌿 MeriZindagi</div><div class="tag">आपके परिवार की जरूरी बातें, एक जगह</div></div><div>🇮🇳 हिंदी</div></div>
+ <div class="welcome">नमस्ते! 👋</div><div class="hero">आज की ज़िंदगी को आसान बनाइए</div>
+</header>
+<main>
+ <section class="stats">
+  <div class="stat"><small>कुल रिमाइंडर</small><strong id="remCount">0</strong></div>
+  <div class="stat"><small>दस्तावेज़</small><strong id="docCount">0</strong></div>
+  <div class="stat"><small>परिवार के काम</small><strong id="taskCount">0</strong></div>
+  <div class="stat"><small>पूरे हुए काम</small><strong id="doneCount">0</strong></div>
+ </section>
+ <nav class="tabs">
+  <button class="tab active" data-tab="home">होम</button>
+  <button class="tab" data-tab="reminders">रिमाइंडर</button>
+  <button class="tab" data-tab="docs">दस्तावेज़</button>
+  <button class="tab" data-tab="tasks">परिवार</button>
+ </nav>
+ <section id="home" class="view">
+  <div class="panel">
+   <div class="row"><h2>आज का डैशबोर्ड</h2><span class="pill">फ्री वर्जन</span></div>
+   <p class="muted">बिल, EMI, जरूरी तारीखें और परिवार के काम समय पर याद रखें।</p>
+   <div class="actions"><button onclick="showTab('reminders')">＋ रिमाइंडर जोड़ें</button><button class="secondary" onclick="showTab('docs')">दस्तावेज़ जोड़ें</button></div>
+  </div>
+  <div class="panel" style="margin-top:12px"><h2>आने वाले रिमाइंडर</h2><div id="upcoming" class="list"></div></div>
+  <div class="notice" style="margin-top:12px">ध्यान दें: यह शुरुआती ऑफलाइन वर्जन है। ऐप का डेटा इसी फोन के ब्राउज़र में सेव होता है। ब्राउज़र डेटा मिटाने पर जानकारी हट सकती है।</div>
+ </section>
+ <section id="reminders" class="view hidden">
+  <div class="panel"><h2>🔔 नया रिमाइंडर</h2>
+   <form id="remForm">
+    <div><label>किस बात का रिमाइंडर?</label><input id="remTitle" required placeholder="जैसे बिजली बिल, EMI, बीमा"></div>
+    <div class="row"><div style="flex:1"><label>तारीख</label><input id="remDate" type="date" required></div><div style="flex:1"><label>श्रेणी</label><select id="remType"><option>बिल</option><option>EMI</option><option>बीमा</option><option>गाड़ी</option><option>अन्य</option></select></div></div>
+    <button type="submit">रिमाइंडर सेव करें</button>
+   </form>
+  </div>
+  <div class="panel" style="margin-top:12px">
+   <div class="row"><div><strong>🔔 मोबाइल नोटिफिकेशन</strong><div class="muted">तारीख से 1 दिन पहले और तारीख वाले दिन अलर्ट</div></div><button class="secondary" id="enableNotifications">चालू करें</button></div>
+   <p class="muted" id="notificationStatus">नोटिफिकेशन अभी चालू नहीं हैं।</p>
+  </div>
+  <div id="remList" class="list"></div>
+ </section>
+ <section id="docs" class="view hidden">
+  <div class="panel"><h2>📁 दस्तावेज़ की जानकारी जोड़ें</h2>
+   <form id="docForm">
+    <div><label>दस्तावेज़ का नाम</label><input id="docTitle" required placeholder="जैसे वाहन बीमा"></div>
+    <div class="row"><div style="flex:1"><label>किसका दस्तावेज़?</label><input id="docOwner" placeholder="जैसे पिताजी"></div><div style="flex:1"><label>समाप्ति तारीख (यदि हो)</label><input id="docDate" type="date"></div></div>
+    <button type="submit">जानकारी सेव करें</button>
+   </form>
+  </div>
+  <div class="notice" style="margin-top:12px">सुरक्षा: इस शुरुआती वर्जन में केवल दस्तावेज़ का नाम/तारीख सेव करें। आधार/पैन नंबर, फोटो, पासवर्ड या बैंक जानकारी न डालें।</div>
+  <div id="docList" class="list"></div>
+ </section>
+ <section id="tasks" class="view hidden">
+  <div class="panel"><h2>👨‍👩‍👧 परिवार के काम</h2>
+   <form id="taskForm">
+    <div><label>काम क्या है?</label><input id="taskTitle" required placeholder="जैसे स्कूल फीस जमा करना"></div>
+    <div><label>किसके लिए?</label><input id="taskOwner" placeholder="जैसे राहुल"></div>
+    <button type="submit">काम जोड़ें</button>
+   </form>
+  </div><div id="taskList" class="list"></div>
+ </section>
+ <section id="premium" class="view hidden">
+  <div class="panel"><h2>⭐ MeriZindagi Premium</h2><p>आगे आने वाले Premium फीचर:</p><ul><li>परिवार के कई सदस्य</li><li>क्लाउड बैकअप</li><li>ज्यादा रिमाइंडर और स्टोरेज</li><li>विज्ञापन-मुक्त अनुभव</li></ul><h2>₹49 / महीना</h2><p class="muted">यह अभी केवल डेमो है। कोई भुगतान नहीं लिया जा रहा है।</p><button class="secondary" onclick="alert('Premium भुगतान अभी चालू नहीं है।')">Premium जल्द आ रहा है</button></div>
+ </section>
+ <div class="panel" style="margin-top:14px"><div class="row"><div><strong>⭐ Premium प्लान</strong><div class="muted">और सुविधाएँ जल्द मिलेंगी</div></div><button class="secondary" onclick="showTab('premium')">देखें</button></div></div>
+</main>
+<footer>© MeriZindagi • आपका डेटा इस डिवाइस पर</footer>
+<script>
+const $=id=>document.getElementById(id);
+const load=(k)=>JSON.parse(localStorage.getItem('mz_'+k)||'[]');
+const save=(k,v)=>{localStorage.setItem('mz_'+k,JSON.stringify(v));render()};
+let reminders=load('reminders'), docs=load('docs'), tasks=load('tasks');
+function showTab(name){document.querySelectorAll('.view').forEach(x=>x.classList.add('hidden'));$(name).classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab)));
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function card(title,sub,buttons=''){return `<div class="item"><div class="row"><strong>${escapeHtml(title)}</strong>${buttons}</div><small>${escapeHtml(sub)}</small></div>`}
+
+// नोटिफिकेशन: शुरुआती वेब वर्जन में ऐप खुला रहने पर ही तारीख चेक होगी।
+const notificationStatus = $('notificationStatus');
+function updateNotificationStatus(){
+ if (!('Notification' in window)) {
+  notificationStatus.textContent = 'इस ब्राउज़र में नोटिफिकेशन उपलब्ध नहीं हैं।';
+  $('enableNotifications').disabled = true;
+  return;
+ }
+ notificationStatus.textContent = Notification.permission === 'granted'
+  ? 'नोटिफिकेशन की अनुमति मिल गई है। अलर्ट के लिए ऐप खुला होना जरूरी है।'
+  : Notification.permission === 'denied'
+   ? 'नोटिफिकेशन ब्लॉक हैं। Chrome की Site settings में अनुमति दें।'
+   : 'नोटिफिकेशन की अनुमति दें। ऐप खुला रहने पर अलर्ट आएगा।';
+}
+$('enableNotifications').addEventListener('click', async ()=>{
+ if (!('Notification' in window)) { updateNotificationStatus(); return; }
+ try {
+  await Notification.requestPermission();
+  updateNotificationStatus();
+  checkReminderNotifications();
+ } catch(e) { notificationStatus.textContent = 'नोटिफिकेशन अनुमति नहीं मिल सकी।'; }
+});
+function checkReminderNotifications(){
+ if (!('Notification' in window) || Notification.permission !== 'granted') return;
+ const today = new Date(); today.setHours(0,0,0,0);
+ load('reminders').forEach(r=>{
+  if (!r.date) return;
+  const due = new Date(r.date+'T00:00:00');
+  const diff = Math.round((due-today)/86400000);
+  if (diff !== 1 && diff !== 0) return;
+  const kind = diff === 1 ? 'tomorrow' : 'today';
+  const key = `mz_notified_${r.title}_${r.date}_${kind}`;
+  if (localStorage.getItem(key)) return;
+  const body = diff === 1
+   ? `${r.title} की तारीख कल (${r.date}) है।`
+   : `${r.title} की तारीख आज (${r.date}) है।`;
+  try {
+   new Notification('MeriZindagi रिमाइंडर', {body});
+   localStorage.setItem(key, 'yes');
+  } catch(e) {}
+ });
+}
+updateNotificationStatus();
+setInterval(checkReminderNotifications, 60000);
+document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) checkReminderNotifications(); });
+
+function render(){
+ reminders=load('reminders');docs=load('docs');tasks=load('tasks');
+ $('remCount').textContent=reminders.length;$('docCount').textContent=docs.length;$('taskCount').textContent=tasks.length;$('doneCount').textContent=tasks.filter(t=>t.done).length;
+ const sorted=[...reminders].sort((a,b)=>a.date.localeCompare(b.date));
+ $('remList').innerHTML=sorted.map((r,i)=>card(r.title,`${r.type} • ${r.date}`,`<button class="danger" onclick="del('reminders',${i})">हटाएँ</button>`)).join('')||'<div class="empty">अभी कोई रिमाइंडर नहीं है।</div>';
+ $('upcoming').innerHTML=sorted.slice(0,3).map(r=>card(r.title,`${r.type} • ${r.date}`)).join('')||'<div class="empty">अभी कोई रिमाइंडर नहीं है।</div>';
+ $('docList').innerHTML=docs.map((d,i)=>card(d.title,`${d.owner||'परिवार'} • ${d.date||'समाप्ति तारीख नहीं'}`,`<button class="danger" onclick="del('docs',${i})">हटाएँ</button>`)).join('')||'<div class="empty">अभी कोई दस्तावेज़ नहीं जोड़ा गया।</div>';
+ $('taskList').innerHTML=tasks.map((t,i)=>card((t.done?'✓ ':'')+t.title,`जिम्मेदार: ${t.owner||'तय नहीं'}`,`<div class="actions"><button class="secondary" onclick="toggleTask(${i})">${t.done?'फिर खोलें':'पूरा हुआ'}</button><button class="danger" onclick="del('tasks',${i})">हटाएँ</button></div>`)).join('')||'<div class="empty">अभी कोई काम नहीं जोड़ा गया।</div>';
+}
+$('remForm').addEventListener('submit',e=>{e.preventDefault();reminders.push({title:$('remTitle').value.trim(),date:$('remDate').value,type:$('remType').value});save('reminders',reminders);e.target.reset();});
+$('docForm').addEventListener('submit',e=>{e.preventDefault();docs.push({title:$('docTitle').value.trim(),owner:$('docOwner').value.trim(),date:$('docDate').value});save('docs',docs);e.target.reset();});
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();tasks.push({title:$('taskTitle').value.trim(),owner:$('taskOwner').value.trim(),done:false});save('tasks',tasks);e.target.reset();});
+function del(key,i){let a=load(key);a.splice(i,1);save(key,a)}
+function toggleTask(i){let a=load('tasks');a[i].done=!a[i].done;save('tasks',a)}
+render();
+</script>
+</body></html>
