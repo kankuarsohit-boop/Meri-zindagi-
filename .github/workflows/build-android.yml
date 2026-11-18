@@ -37,7 +37,7 @@ jobs:
         run: unzip -q MeriZindagi-Premium-Modern-Android-v2.zip -d android-src
 
       - name: Build APK
-        working-directory: android-src/MeriZindagiAndroid
+        working-directory: android-src
         run: gradle assembleDebug
 
       - name: Save APK
