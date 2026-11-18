@@ -34,7 +34,7 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract Android project
-        run: unzip -q MeriZindagi-Android-Source.zip -d android-src
+        run: unzip -q MeriZindagi-Premium-Modern-Android-v2.zip -d android-src
 
       - name: Build APK
         working-directory: android-src/MeriZindagiAndroid
