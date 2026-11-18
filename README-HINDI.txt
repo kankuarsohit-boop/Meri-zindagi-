@@ -1,22 +1,20 @@
-MeriZindagi Android starter project
+MeriZindagi Premium Modern Android v2.0
 
-यह एक शुरुआती native Android ऐप है, वेबसाइट नहीं।
+यह native Android ऐप है, वेबसाइट नहीं।
 
-शामिल सुविधाएँ:
-- बिल / EMI एंट्री
-- दस्तावेज़ की तारीख
-- परिवार के काम
-- जानकारी मोबाइल में सेव
-- रोज़ सुबह 9 बजे रिमाइंडर शेड्यूल
-- Android notification permission और exact alarm access के लिए विकल्प
+इस वर्जन में:
+- Premium dark navy modern dashboard
+- होम, बिल/EMI, दस्तावेज़, परिवार और प्रोफाइल टैब
+- बिल/EMI, दस्तावेज़ और परिवार के काम जोड़ना
+- तारीख, रकम और नोट सेव करना
+- एंट्री पूरी/पेंडिंग करना और हटाना
+- लोकल फोन स्टोरेज
+- रोज़ 9 बजे Android reminder scheduling
+- Android 13+ notification permission request
 
-महत्वपूर्ण:
-- यह शुरुआती संस्करण डेटा केवल इसी मोबाइल में सेव करता है।
-- रिमाइंडर Android की alarm/notification permissions और डिवाइस की battery settings पर निर्भर करते हैं।
-- अभी इसमें login, cloud sync, payment, premium subscription या Play Store signing शामिल नहीं है।
-- Play Store पर डालने से पहले release signing, privacy policy, testing और Play Console की प्रक्रिया पूरी करनी होगी।
-
-GitHub Actions build:
-1. इस ZIP को GitHub repository के root में MeriZindagi-Android-Source.zip नाम से upload करें।
-2. README के साथ दिए गए build workflow को .github/workflows/build-android.yml में बनाएँ।
-3. Actions tab में build पूरा होने पर app-debug.apk artifact डाउनलोड करें।
+ध्यान दें:
+- डेटा अभी इसी फोन में सेव होता है; cloud sync/login शामिल नहीं है।
+- Premium membership/payment अभी केवल आगे के विकास की योजना है, भुगतान चालू नहीं है।
+- फोटो/फाइल अपलोड और परिवार के दूसरे फोन से sync इस वर्जन में शामिल नहीं हैं।
+- रिमाइंडर exact-alarm permission और फोन की battery restrictions पर निर्भर कर सकते हैं।
+- Play Store release से पहले privacy policy, app signing, testing और Play Console requirements पूरी करनी होंगी।
