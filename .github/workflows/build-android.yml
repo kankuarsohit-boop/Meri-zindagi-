@@ -1,10 +1,11 @@
+
 name: Build MeriZindagi Android APK
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'MeriZindagi-Android-Source.zip'
+      - 'MeriZindagi-Professional-Update-v3.4.zip'
       - '.github/workflows/build-android.yml'
 
 jobs:
@@ -34,7 +35,7 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract Android project
-        run: unzip -q MeriZindagi-Premium-Modern-Android-v2.zip -d android-src
+        run: unzip -q MeriZindagi-Professional-Update-v3.4.zip -d android-src
 
       - name: Build APK
         working-directory: android-src/MeriZindagi-Premium-Android
