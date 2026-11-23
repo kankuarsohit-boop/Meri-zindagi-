@@ -1,10 +1,10 @@
-name: Build MeriZindagi Android APK v3.6
+name: MeriZindagi Android Build
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'MeriZindagi-v3.6-Futuristic-UI-Source.zip'
+      - 'MeriZindagi-v3.7-BlueGold-EntryUI.zip'
       - '.github/workflows/build-android.yml'
 
 jobs:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Java 17
@@ -32,21 +32,21 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract v3.6 source
+      - name: Extract v3.7 source
         run: |
-          unzip -q MeriZindagi-v3.6-Futuristic-UI-Source.zip -d android-src
+          unzip -q MeriZindagi-v3.7-BlueGold-EntryUI.zip -d android-src
 
-      - name: Verify project folder
+      - name: Verify Android project
         run: |
           find android-src -name build.gradle -o -name build.gradle.kts
 
-      - name: Build APK
+      - name: Build Debug APK
         working-directory: android-src/MeriZindagi-Premium-Android
         run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MeriZindagi-v3.6-APK
+          name: MeriZindagi-v3.7-APK
           path: android-src/**/*.apk
           if-no-files-found: error
