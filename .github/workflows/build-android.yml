@@ -39,7 +39,7 @@ jobs:
 
       - name: Verify Android Project
         run: |
-          test -f android-src/MeriZindagi-Premium-Android/app/build.gradle
+          test -f android-src/MeriZindagi-Premium-Android/app/build.gradle.kts
           test -f android-src/MeriZindagi-Premium-Android/app/src/main/java/com/merizindagi/app/MainActivity.kt
 
       - name: Build Debug APK
