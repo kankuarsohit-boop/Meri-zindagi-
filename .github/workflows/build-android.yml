@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - 'MeriZindagi-v3.7.1-Line834-Fixed.zip'
+      - 'MeriZindagi-Reference-UI-Redesign-Pass1.zip'
       - '.github/workflows/build-android.yml'
 
 jobs:
@@ -33,23 +34,43 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract Fixed Source ZIP
+      - name: Extract and Build Android App
         run: |
-          unzip -q 'MeriZindagi-v3.7.1-Line834-Fixed.zip' -d android-src
+          if [ -f "MeriZindagi-Reference-UI-Redesign-Pass1.zip" ]; then
+            ZIP_FILE="MeriZindagi-Reference-UI-Redesign-Pass1.zip"
+          elif [ -f "MeriZindagi-v3.7.1-Line834-Fixed.zip" ]; then
+            ZIP_FILE="MeriZindagi-v3.7.1-Line834-Fixed.zip"
+          else
+            echo "Android source ZIP not found"
+            exit 1
+          fi
 
-      - name: Verify Android Project
-        run: |
-          test -f android-src/MeriZindagi-Premium-Android/app/build.gradle.kts
-          test -f android-src/MeriZindagi-Premium-Android/app/src/main/java/com/merizindagi/app/MainActivity.kt
+          echo "Building from: $ZIP_FILE"
+          mkdir -p android-src
+          unzip -q "$ZIP_FILE" -d android-src
 
-      - name: Build Debug APK
-        working-directory: android-src/MeriZindagi-Premium-Android
-        run: gradle assembleDebug
+          SETTINGS_FILE=$(find android-src -type f \( -name settings.gradle -o -name settings.gradle.kts \) | head -n 1)
+
+          if [ -z "$SETTINGS_FILE" ]; then
+            echo "Gradle project not found in ZIP"
+            exit 1
+          fi
+
+          PROJECT_DIR=$(dirname "$SETTINGS_FILE")
+
+          test -f "$PROJECT_DIR/app/build.gradle.kts" || test -f "$PROJECT_DIR/app/build.gradle"
+          test -f "$PROJECT_DIR/app/src/main/java/com/merizindagi/app/MainActivity.kt"
+
+          gradle -p "$PROJECT_DIR" assembleDebug
+
+          APK_FILE="$PROJECT_DIR/app/build/outputs/apk/debug/app-debug.apk"
+          test -f "$APK_FILE"
+          echo "APK_PATH=$APK_FILE" >> "$GITHUB_ENV"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: MeriZindagi-v3.7.1-APK
-          path: android-src/MeriZindagi-Premium-Android/app/build/outputs/apk/debug/app-debug.apk
+          name: MeriZindagi-Redesign-APK
+          path: ${{ env.APK_PATH }}
           if-no-files-found: error
           
