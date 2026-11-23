@@ -34,7 +34,7 @@ jobs:
 
       - name: Extract v3.7.1 source
         run: |
-          unzip -q MeriZindagi-v3.7.1-BlueGold-SyntaxFix.zip -d android-src
+          unzip -q 'MeriZindagi-v3.7.1-BlueGold-SyntaxFix(1).zip' -d android-src
 
       - name: Verify Android project
         run: |
